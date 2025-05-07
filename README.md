@@ -1,4 +1,4 @@
-GOGO
+GOGO (fork)
 ======
 
 gogo is a great way to bookmark directories inside your shell. You don't have to remember long and

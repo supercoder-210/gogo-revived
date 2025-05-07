@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Copyright (C) 2013-2014 Michal Goral
@@ -26,13 +26,10 @@ import gettext
 import locale
 import operator
 
-__version__ = "1.3.0"
+__version__ = "1.4.0(fork-to-revive)"
 
-t = gettext.translation(
-    domain='gogo',
-    fallback=True)
 gettext.install('gogo')
-_ = t.ugettext
+_ = gettext.gettext
 
 HELP_MSG = _(
 """gogo - bookmark your favorite directories
@@ -134,7 +131,7 @@ def printConfig(config):
         configList.sort(key = operator.itemgetter(0))
 
         for key, val in configList:
-            keyStr = "%s" % key.decode(locale.getpreferredencoding())
+            keyStr = key
             valStr = " : %s" % val
             echo(keyStr.rjust(justification), endline=False)
             echo(valStr)
@@ -153,10 +150,20 @@ def openConfigInEditor():
     try:
         editor = os.environ["EDITOR"]
     except KeyError:
-        echo(_("No $EDITOR set. Trying vi."), sys.stderr)
+        editor = "vim"
+    except KeyError:
         editor = "vi"
+    except KeyError:
+        editor = "nvim"
+    except KeyError:
+        editor = "nano"
+    except KeyError:
+        editor = "emacs"
+    except KeyError:
+        echo(_("No $EDITOR set. (Tried vim, vi, nvim, nano, emacs)"), sys.stderr)
     call("%s %s" % (editor, configPath))
     sys.exit(1)
+
 
 def readConfig():
     createNonExistingConfigDir()
